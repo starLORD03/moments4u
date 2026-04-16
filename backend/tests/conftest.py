@@ -21,8 +21,7 @@ from app.database import Base
 from app.dependencies import get_db
 from app.utils.security import hash_password, create_access_token
 
-# Use true in-memory SQLite for tests to prevent test pollution
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+# We will generate a unique in-memory URL per test fixture to prevent sharing state
 
 
 @pytest.fixture(scope="session")
@@ -36,7 +35,9 @@ def event_loop():
 async def db_session():
     """Create a fresh test database for each test."""
     from sqlalchemy.pool import StaticPool
-    engine = create_async_engine(TEST_DATABASE_URL, echo=False, poolclass=StaticPool)
+    # Unique URI per test ensures perfect isolation when tests run concurrently or reuse engines
+    test_db_url = f"sqlite+aiosqlite:///file:memdb_{uuid.uuid4().hex}?mode=memory&cache=shared&uri=true"
+    engine = create_async_engine(test_db_url, echo=False, poolclass=StaticPool)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
