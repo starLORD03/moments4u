@@ -21,8 +21,8 @@ from app.database import Base
 from app.dependencies import get_db
 from app.utils.security import hash_password, create_access_token
 
-# Use in-memory SQLite for tests (swap to test postgres for integration)
-TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+# Use true in-memory SQLite for tests to prevent test pollution
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
 
 @pytest.fixture(scope="session")
@@ -35,7 +35,8 @@ def event_loop():
 @pytest_asyncio.fixture
 async def db_session():
     """Create a fresh test database for each test."""
-    engine = create_async_engine(TEST_DATABASE_URL, echo=False)
+    from sqlalchemy.pool import StaticPool
+    engine = create_async_engine(TEST_DATABASE_URL, echo=False, poolclass=StaticPool)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

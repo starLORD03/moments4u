@@ -93,6 +93,6 @@ async def test_login_wrong_password(client):
 
 @pytest.mark.asyncio
 async def test_me_unauthorized(client):
-    """Accessing /me without token should return 403."""
+    """Accessing /me without token should return 401."""
     response = await client.get("/api/v1/auth/me")
-    assert response.status_code == 403
+    assert response.status_code == 401
