@@ -5,10 +5,15 @@ from datetime import datetime, timezone
 
 from sqlalchemy import String, Integer, Float, Boolean, ForeignKey, Index, Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy import Uuid as PGUUID
 from pgvector.sqlalchemy import Vector
+from sqlalchemy.ext.compiler import compiles
 
 from ..database import Base
+
+@compiles(Vector, "sqlite")
+def compile_vector_sqlite(element, compiler, **kw):
+    return "TEXT"
 
 
 class Face(Base):

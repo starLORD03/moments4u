@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import String, Boolean, ForeignKey, Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy import Uuid as PGUUID
 
 from ..database import Base
 
