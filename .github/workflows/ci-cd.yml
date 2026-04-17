@@ -75,6 +75,10 @@ jobs:
     # Only run deploy/push step if the tests and build succeed AND it's on the main branch
     needs: [backend-test, frontend-build]
     if: github.ref == 'refs/heads/main'
+    
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout Code
