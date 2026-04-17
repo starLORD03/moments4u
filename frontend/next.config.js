@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   // Allow images from S3/MinIO signed URLs
   images: {
     remotePatterns: [
